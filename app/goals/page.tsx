@@ -4,7 +4,7 @@ const GoalsTab = dynamic(import("./components/GoalsTab"), { ssr: false });
 
 export default async function Goals() {
   const goals = await fetch(
-    "http://127.0.0.1:3000/api/matches/3794686/goals"
+    "http://127.0.0.1:8000/api/matches/3794686/goals"
   ).then(async (res) => {
     const goals = await res.json();
     // const result: { [key: string]: any } = {};
