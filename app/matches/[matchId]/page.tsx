@@ -1,20 +1,9 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import { Layer, Stage } from "react-konva";
-import BallLost from "./components/BallLost";
-import Carry from "./components/Carry";
-import DefensiveAction, {
-  DefensiveActionLegend,
-} from "./components/DefensiveAction";
-import Dribble from "./components/Dribble";
-import FieldImage from "./components/FieldImage";
-import Shot from "./components/Shot";
-import TabPasses from "./components/TabPasses";
-import { FIELD_HEIGHT, FIELD_WIDTH } from "./consts";
-import { useMatchInfo, useMatchTeams, usePlayerStats } from "./hooks";
 import { useRouter } from "next/navigation";
+import TabPasses from "./components/TabPasses";
+import { useMatchInfo } from "./hooks";
 
 const scale = 6;
 
@@ -73,96 +62,96 @@ export default function Dashboard({
   );
 }
 
-function _Dashboard({ params }: any) {
-  const matchTeams = useMatchTeams(params.matchId);
-  const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
-  const [tab, setTab] = useState<any>("progressive_passes");
-  const playerStats = usePlayerStats(params.matchId, selectedPlayerId);
+// function _Dashboard({ params }: any) {
+//   const matchTeams = useMatchTeams(params.matchId);
+//   const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
+//   const [tab, setTab] = useState<any>("progressive_passes");
+//   const playerStats = usePlayerStats(params.matchId, selectedPlayerId);
 
-  return (
-    <main className="w-full h-screen flex flex-col items-center justify-center">
-      <div className="flex flex-col items-start">
-        <div className="flex flex-row gap-4">
-          {/* {matchTeams[0] && (
-            <TeamPlayers
-              players={matchTeams[0].players}
-              selectedPlayerId={selectedPlayerId}
-              onClick={setSelectedPlayerId}
-            />
-          )} */}
+//   return (
+//     <main className="w-full h-screen flex flex-col items-center justify-center">
+//       <div className="flex flex-col items-start">
+//         <div className="flex flex-row gap-4">
+//           {/* {matchTeams[0] && (
+//             <TeamPlayers
+//               players={matchTeams[0].players}
+//               selectedPlayerId={selectedPlayerId}
+//               onClick={setSelectedPlayerId}
+//             />
+//           )} */}
 
-          <div className="flex flex-col items-start gap-4">
-            {/* <Select
-              options={statsTabs.map((tab) => ({
-                value: tab,
-                label: TabToLabel[tab],
-              }))}
-              onChange={(v) => setTab(v.target.value as StatsTab)}
-            /> */}
-            <Stage
-              width={FIELD_WIDTH * scale}
-              height={FIELD_HEIGHT * scale}
-              scaleX={scale}
-              scaleY={scale}
-            >
-              <Layer>
-                <FieldImage />
-              </Layer>
-              {playerStats && (
-                <>
-                  {tab === "shots" && (
-                    <Layer>
-                      {playerStats["shots"].map((shot, i) => (
-                        <Shot key={i} {...shot} />
-                      ))}
-                    </Layer>
-                  )}
-                  {/* {tab === "progressive_passes" && (
-                    <Layer>
-                      {playerStats["passes"].map((pass, i) => (
-                        <Pass key={i} {...pass} />
-                      ))}
-                    </Layer>
-                  )} */}
-                  {tab === "carries_and_dribbles" && (
-                    <Layer>
-                      {playerStats["carries"].map((carry, i) => (
-                        <Carry key={i} {...carry} />
-                      ))}
-                      {playerStats["dribbles"].map((dribble, i) => (
-                        <Dribble key={i} {...dribble} />
-                      ))}
-                    </Layer>
-                  )}
-                  {tab === "balls_lost" && (
-                    <Layer>
-                      {playerStats["balls_lost"].map((event, i) => (
-                        <BallLost key={i} {...event} />
-                      ))}
-                    </Layer>
-                  )}
-                  {tab === "defense" && (
-                    <Layer>
-                      {playerStats["defensive_actions"].map((event, i) => (
-                        <DefensiveAction key={i} {...event} />
-                      ))}
-                    </Layer>
-                  )}
-                </>
-              )}
-            </Stage>
-            {tab === "defense" && <DefensiveActionLegend />}
-          </div>
-          {/* {matchTeams[1] && (
-            <TeamPlayers
-              players={matchTeams[1].players}
-              selectedPlayerId={selectedPlayerId}
-              onClick={setSelectedPlayerId}
-            />
-          )} */}
-          {/* <CanvasField matchTeams={matchTeams as any} /> */}
-        </div>
-      </div>
-    </main>
-  );
-}
+//           <div className="flex flex-col items-start gap-4">
+//             {/* <Select
+//               options={statsTabs.map((tab) => ({
+//                 value: tab,
+//                 label: TabToLabel[tab],
+//               }))}
+//               onChange={(v) => setTab(v.target.value as StatsTab)}
+//             /> */}
+//             <Stage
+//               width={FIELD_WIDTH * scale}
+//               height={FIELD_HEIGHT * scale}
+//               scaleX={scale}
+//               scaleY={scale}
+//             >
+//               <Layer>
+//                 <FieldImage />
+//               </Layer>
+//               {playerStats && (
+//                 <>
+//                   {tab === "shots" && (
+//                     <Layer>
+//                       {playerStats["shots"].map((shot, i) => (
+//                         <Shot key={i} {...shot} />
+//                       ))}
+//                     </Layer>
+//                   )}
+//                   {/* {tab === "progressive_passes" && (
+//                     <Layer>
+//                       {playerStats["passes"].map((pass, i) => (
+//                         <Pass key={i} {...pass} />
+//                       ))}
+//                     </Layer>
+//                   )} */}
+//                   {tab === "carries_and_dribbles" && (
+//                     <Layer>
+//                       {playerStats["carries"].map((carry, i) => (
+//                         <Carry key={i} {...carry} />
+//                       ))}
+//                       {playerStats["dribbles"].map((dribble, i) => (
+//                         <Dribble key={i} {...dribble} />
+//                       ))}
+//                     </Layer>
+//                   )}
+//                   {tab === "balls_lost" && (
+//                     <Layer>
+//                       {playerStats["balls_lost"].map((event, i) => (
+//                         <BallLost key={i} {...event} />
+//                       ))}
+//                     </Layer>
+//                   )}
+//                   {tab === "defense" && (
+//                     <Layer>
+//                       {playerStats["defensive_actions"].map((event, i) => (
+//                         <DefensiveAction key={i} {...event} />
+//                       ))}
+//                     </Layer>
+//                   )}
+//                 </>
+//               )}
+//             </Stage>
+//             {tab === "defense" && <DefensiveActionLegend />}
+//           </div>
+//           {/* {matchTeams[1] && (
+//             <TeamPlayers
+//               players={matchTeams[1].players}
+//               selectedPlayerId={selectedPlayerId}
+//               onClick={setSelectedPlayerId}
+//             />
+//           )} */}
+//           {/* <CanvasField matchTeams={matchTeams as any} /> */}
+//         </div>
+//       </div>
+//     </main>
+//   );
+// }
