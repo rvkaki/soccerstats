@@ -2,8 +2,11 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
-import TabPasses from "../../../components/TabPasses";
 import { useMatchInfo } from "./hooks";
+import dynamic from "next/dynamic";
+const TabPasses = dynamic(import("../../../components/TabPasses"), {
+  ssr: false,
+});
 
 const scale = 6;
 
