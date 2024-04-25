@@ -3,7 +3,7 @@ import { Competition } from "./types";
 
 export default async function Home() {
   const competitions = await fetch(
-    "http://localhost:3000/api/competitions"
+    "http://127.0.0.1:3000/api/competitions"
   ).then(async (res) => {
     return (await res.json()) as Competition[];
   });
