@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Competition, Match } from "./types";
 import { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const competition = await fetch(`http://localhost:3000/api/matches`).then(
     async (res) => {
