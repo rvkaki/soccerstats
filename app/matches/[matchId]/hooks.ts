@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import {
+  Competition,
+  Match,
   PlayerPosition,
   BallLost as TBallLost,
   BallRecovery as TBallRecovery,
@@ -21,6 +23,22 @@ export type Player = {
   position: { id: number; name: PlayerPosition } | PlayerPosition;
   is_starter: boolean;
 };
+
+export function useMatches() {
+  const [matches, setMatches] = useState<{
+    competition: Competition;
+    matches: Match[];
+  } | null>();
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/matches").then(async (res) => {
+      const matches = await res.json();
+      setMatches(matches);
+    });
+  }, []);
+
+  return matches;
+}
 
 export function useMatchTeams(matchId: string) {
   const [matchTeams, setMatchTeams] = useState<

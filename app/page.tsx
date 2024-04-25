@@ -1,16 +1,14 @@
+"use client";
+
 import Link from "next/link";
-import { Competition, Match } from "./types";
-import { Metadata } from "next";
+import { useMatches } from "./matches/[matchId]/hooks";
 
-export const dynamic = "force-dynamic";
+export default function Home() {
+  const competition = useMatches();
 
-export default async function Home() {
-  const competition = await fetch(`http://localhost:3000/api/matches`).then(
-    async (res) => {
-      const data = await res.json();
-      return data as { competition: Competition; matches: Match[] };
-    }
-  );
+  if (!competition) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main>
@@ -34,24 +32,4 @@ export default async function Home() {
       </ul>
     </main>
   );
-}
-
-type Props = {
-  params: { competitionId: number; seasonId: number };
-  searchParams: URLSearchParams;
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // fetch data
-  const competition = await fetch(`http://localhost:3000/api/matches`).then(
-    async (res) => {
-      const data = await res.json();
-      return data as { competition: Competition; matches: Match[] };
-    }
-  );
-
-  const title = `${competition.competition.competition_name} ${competition.competition.season_name}`;
-  return {
-    title,
-  };
 }
