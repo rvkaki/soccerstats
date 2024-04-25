@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
-import TabPasses from "./components/TabPasses";
+import TabPasses from "../../../components/TabPasses";
 import { useMatchInfo } from "./hooks";
 
 const scale = 6;

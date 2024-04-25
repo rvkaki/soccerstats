@@ -1,9 +1,16 @@
 import { Layer, Stage } from "react-konva";
-import { FIELD_HEIGHT, FIELD_WIDTH, adjustLocation } from "../consts";
-import { useMatchPassTendencies, useMatchTeams } from "../hooks";
-import FieldImage from "./FieldImage";
-import Pass from "./Pass";
-import Player from "./Player";
+import {
+  FIELD_HEIGHT,
+  FIELD_WIDTH,
+  adjustLocation,
+} from "../app/matches/[matchId]/consts";
+import {
+  useMatchPassTendencies,
+  useMatchTeams,
+} from "../app/matches/[matchId]/hooks";
+import FieldImage from "../app/matches/[matchId]/components/FieldImage";
+import Pass from "../app/matches/[matchId]/components/Pass";
+import Player from "../app/matches/[matchId]/components/Player";
 
 const scale = 6;
 
