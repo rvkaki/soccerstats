@@ -1,17 +1,19 @@
 "use client";
 
-import { Circle, Group, Layer, Line, Stage, Text } from "react-konva";
+import { useState } from "react";
+import { Circle, Group, Layer, Line, Stage } from "react-konva";
+import FieldImage from "../../../app/matches/[matchId]/components/FieldImage";
 import {
-  Block,
+  FIELD_HEIGHT,
+  FIELD_WIDTH,
+} from "../../../app/matches/[matchId]/consts";
+import {
   Carry,
   Goalkeeper,
   MatchEvent,
   Pass,
   Shot as TShot,
-} from "../../types";
-import { FIELD_HEIGHT, FIELD_WIDTH } from "../../matches/[matchId]/consts";
-import FieldImage from "../../matches/[matchId]/components/FieldImage";
-import { useState } from "react";
+} from "../../../app/types";
 
 const scale = 8;
 
