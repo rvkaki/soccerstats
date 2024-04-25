@@ -14,6 +14,7 @@ import {
   Pass as TPass,
   Shot as TShot,
 } from "@/app/types";
+import { API_URL } from "@/lib/consts";
 
 export type Player = {
   id: number;
@@ -31,7 +32,7 @@ export function useMatches() {
   } | null>();
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/matches").then(async (res) => {
+    fetch(`${API_URL}/matches`).then(async (res) => {
       const matches = await res.json();
       setMatches(matches);
     });
@@ -46,12 +47,10 @@ export function useMatchTeams(matchId: string) {
   >([]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/matches/${matchId}/teams`).then(
-      async (res) => {
-        const matchTeams = await res.json();
-        setMatchTeams(matchTeams);
-      }
-    );
+    fetch(`${API_URL}/matches/${matchId}/teams`).then(async (res) => {
+      const matchTeams = await res.json();
+      setMatchTeams(matchTeams);
+    });
   }, [matchId]);
 
   return matchTeams;
@@ -61,7 +60,7 @@ export function useMatchInfo(matchId: string) {
   const [matchInfo, setMatchInfo] = useState<Record<string, any> | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/matches/${matchId}`).then(async (res) => {
+    fetch(`${API_URL}/matches/${matchId}`).then(async (res) => {
       const matchInfo = await res.json();
       setMatchInfo(matchInfo);
     });
@@ -89,13 +88,13 @@ export function usePlayerStats(matchId: string, playerId: number | null) {
   useEffect(() => {
     if (!playerId) return;
 
-    fetch(
-      `http://localhost:3000/api/matches/${matchId}/player-stats/${playerId}`
-    ).then(async (res) => {
-      const playerStats = await res.json();
-      console.log({ playerStats });
-      setPlayerStats(playerStats);
-    });
+    fetch(`${API_URL}/matches/${matchId}/player-stats/${playerId}`).then(
+      async (res) => {
+        const playerStats = await res.json();
+        console.log({ playerStats });
+        setPlayerStats(playerStats);
+      }
+    );
   }, [matchId, playerId]);
 
   return playerStats;
@@ -110,12 +109,10 @@ export function useMatchPassTendencies(matchId: string) {
   }>({});
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/matches/${matchId}/pass-tendencies`).then(
-      async (res) => {
-        const passTendencies = await res.json();
-        setPassTendencies(passTendencies);
-      }
-    );
+    fetch(`${API_URL}/matches/${matchId}/pass-tendencies`).then(async (res) => {
+      const passTendencies = await res.json();
+      setPassTendencies(passTendencies);
+    });
   }, [matchId]);
 
   return passTendencies;

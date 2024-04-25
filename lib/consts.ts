@@ -1,3 +1,8 @@
+export const API_URL =
+  process.env.VERCEL_ENV === "development"
+    ? "http://localhost:3000/api"
+    : "/api";
+
 export const WorldCupFBRefId = "INT-World Cup";
 export const WorldCupFBRefSeasonId = 2022;
 export const WorldCupSBId = 43;
