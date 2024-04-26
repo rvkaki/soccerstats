@@ -85,30 +85,6 @@ export default function TabPasses({ matchId }: { matchId: string }) {
                     />
                   );
                 })}
-                {/* {passTendencies &&
-                    team.players.map((player) => {
-                      const playerData = passTendencies[player.id];
-                      if (!playerData) return null;
-                      return Object.entries(playerData.passes).map(
-                        ([recipientId, count]) => {
-                          const recipientData =
-                            passTendencies[parseInt(recipientId)];
-                          return (
-                            <Pass
-                              key={`passes_from_${player.id}_to_${recipientId}`}
-                              startPosition={adjustLocation(
-                                playerData.avg_position
-                              )}
-                              endPosition={adjustLocation(
-                                recipientData.avg_position
-                              )}
-                              strokeWidth={Math.min(1, count / maxPasses)}
-                              opacity={Math.min(1, count / maxPasses)}
-                            />
-                          );
-                        }
-                      );
-                    })} */}
 
                 {/* Players' average positions */}
                 {team.players.map((player) => {

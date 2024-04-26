@@ -3,12 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { useMatchInfo } from "./hooks";
-import dynamic from "next/dynamic";
-const TabPasses = dynamic(import("../../../components/TabPasses"), {
-  ssr: false,
-});
-
-const scale = 6;
+import TabPasses from "../../../components/TabPasses";
 
 export default function Dashboard({
   params,
