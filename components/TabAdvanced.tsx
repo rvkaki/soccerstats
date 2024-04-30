@@ -102,6 +102,7 @@ export default function TabAdvanced({ matchId }: { matchId: string }) {
                       "offsides",
                       "shields",
                       "bad_behaviours",
+                      "referee_ball_drops",
                     ].includes(k)
                 )
                 .map((key) => (
