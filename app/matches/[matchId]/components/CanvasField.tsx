@@ -3,7 +3,6 @@
 import { Group, Layer, Stage } from "react-konva";
 import { Dribble as TDribble, Lineup, Pass, Shot as TShot } from "../../../types";
 import FieldImage from "../../../../components/FieldImage";
-import PassComponent from "../../../../components/PassComponent";
 import Player from "../../../../components/Player";
 import { useState } from "react";
 import Shot from "../../../../components/Shot";
@@ -90,7 +89,7 @@ export default function CanvasField({
             <Layer>
               <FieldImage />
             </Layer>
-            {tab === "passes" && (
+            {/* {tab === "passes" && (
               <Layer>
                 {passesToRender.map((pass, i) => (
                   <PassComponent
@@ -124,7 +123,7 @@ export default function CanvasField({
                   <Dribble key={i} {...dribble} />
                 ))}
               </Layer>
-            )}
+            )} */}
           </Stage>
 
           <div className="flex flex-col gap-4">
