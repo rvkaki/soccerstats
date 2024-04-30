@@ -1,8 +1,13 @@
 import { Star } from "react-konva";
-import { Dribble as TDribble } from "../../../types";
 
-export default function Dribble({ location, dribble }: TDribble) {
-  const successfull = dribble.outcome.name === "Complete";
+export default function Dribble({
+  location,
+  outcome,
+}: {
+  location: [number, number];
+  outcome: "Incomplete" | "Complete";
+}) {
+  const successfull = outcome === "Complete";
 
   return (
     <Star

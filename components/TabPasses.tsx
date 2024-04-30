@@ -8,21 +8,16 @@ import {
   useMatchPassTendencies,
   useMatchTeams,
 } from "../app/matches/[matchId]/hooks";
-import FieldImage from "../app/matches/[matchId]/components/FieldImage";
-import Pass from "../app/matches/[matchId]/components/Pass";
-import Player from "../app/matches/[matchId]/components/Player";
+import FieldImage from "./FieldImage";
+import Pass from "./Pass";
+import Player from "./Player";
+import { shortenName } from "@/lib/utils";
 
 const scale = 6;
 
-function shortenName(name: string) {
-  const first = name.split(" ")[0];
-  const last = name.split(" ").at(-1);
-  return `${first[0]}. ${last}`;
-}
-
 export default function TabPasses({ matchId }: { matchId: string }) {
-  const matchTeams = useMatchTeams(matchId);
-  const passTendencies = useMatchPassTendencies(matchId);
+  const { data: matchTeams = [] } = useMatchTeams(matchId);
+  const { data: passTendencies = {} } = useMatchPassTendencies(matchId);
 
   const maxPasses = Math.max(
     ...Object.values(passTendencies).flatMap((player) =>

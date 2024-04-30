@@ -1,20 +1,7 @@
-import { useEffect, useState } from "react";
-import {
-  Competition,
-  Match,
-  PlayerPosition,
-  BallLost as TBallLost,
-  BallRecovery as TBallRecovery,
-  Block as TBlock,
-  Carry as TCarry,
-  Clearance as TClearance,
-  Dribble as TDribble,
-  Duel as TDuel,
-  Interception as TInterception,
-  Pass as TPass,
-  Shot as TShot,
-} from "@/app/types";
-import { API_URL } from "@/lib/consts";
+import { Competition, Match, PlayerPosition, Shot as TShot } from "@/app/types";
+import { API_URL, EventType } from "@/lib/consts";
+import { useQuery } from "@tanstack/react-query";
+import { adjustLocation } from "./consts";
 
 export type Player = {
   id: number;
@@ -26,94 +13,127 @@ export type Player = {
 };
 
 export function useMatches() {
-  const [matches, setMatches] = useState<{
-    competition: Competition;
-    matches: Match[];
-  } | null>();
-
-  useEffect(() => {
-    fetch(`${API_URL}/matches`).then(async (res) => {
-      const matches = await res.json();
-      setMatches(matches);
-    });
-  }, []);
-
-  return matches;
+  return useQuery({
+    queryKey: ["matches"],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/matches`);
+      return (await res.json()) as {
+        competition: Competition;
+        matches: Match[];
+      };
+    },
+  });
 }
 
 export function useMatchTeams(matchId: string) {
-  const [matchTeams, setMatchTeams] = useState<
-    { id: number; name: string; players: Player[] }[]
-  >([]);
-
-  useEffect(() => {
-    fetch(`${API_URL}/matches/${matchId}/teams`).then(async (res) => {
-      const matchTeams = await res.json();
-      setMatchTeams(matchTeams);
-    });
-  }, [matchId]);
-
-  return matchTeams;
+  return useQuery({
+    queryKey: ["matches", matchId, "teams"],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/matches/${matchId}/teams`);
+      return (await res.json()) as {
+        id: number;
+        name: string;
+        players: Player[];
+      }[];
+    },
+  });
 }
 
 export function useMatchInfo(matchId: string) {
-  const [matchInfo, setMatchInfo] = useState<Record<string, any> | null>(null);
-
-  useEffect(() => {
-    fetch(`${API_URL}/matches/${matchId}`).then(async (res) => {
-      const matchInfo = await res.json();
-      setMatchInfo(matchInfo);
-    });
-  }, [matchId]);
-
-  return matchInfo;
+  return useQuery({
+    queryKey: ["matches", matchId, "info"],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/matches/${matchId}`);
+      return (await res.json()) as Record<string, any>;
+    },
+  });
 }
 
-export function usePlayerStats(matchId: string, playerId: number | null) {
-  const [playerStats, setPlayerStats] = useState<{
-    shots: TShot[];
-    passes: TPass[];
-    carries: TCarry[];
-    dribbles: TDribble[];
-    balls_lost: TBallLost[];
-    defensive_actions: (
-      | TBallRecovery
-      | TBlock
-      | TInterception
-      | TDuel
-      | TClearance
-    )[];
-  } | null>(null);
+export function usePlayerStatsByJerseyNumber(
+  matchId: string,
+  teamName: string,
+  jerseyNumber: number | null
+) {
+  return useQuery({
+    queryKey: ["matches", matchId, "player-stats", teamName, jerseyNumber],
+    enabled: !!jerseyNumber,
+    queryFn: async () => {
+      if (!jerseyNumber) return null;
 
-  useEffect(() => {
-    if (!playerId) return;
-
-    fetch(`${API_URL}/matches/${matchId}/player-stats/${playerId}`).then(
-      async (res) => {
-        const playerStats = await res.json();
-        console.log({ playerStats });
-        setPlayerStats(playerStats);
-      }
-    );
-  }, [matchId, playerId]);
-
-  return playerStats;
+      const res = await fetch(
+        `${API_URL}/matches/${matchId}/player-stats/${teamName}/${jerseyNumber}`
+      );
+      const data = (await res.json()) as Record<string, any>;
+      return data;
+    },
+  });
 }
 
 export function useMatchPassTendencies(matchId: string) {
-  const [passTendencies, setPassTendencies] = useState<{
-    [player_id: number]: {
-      avg_position: [number, number];
-      passes: { [recipient_id: number]: number };
-    };
-  }>({});
+  return useQuery({
+    queryKey: ["matches", matchId, "pass-tendencies"],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/matches/${matchId}/pass-tendencies`);
+      return (await res.json()) as {
+        [player_id: number]: {
+          avg_position: [number, number];
+          passes: { [recipient_id: number]: number };
+        };
+      };
+    },
+  });
+}
 
-  useEffect(() => {
-    fetch(`${API_URL}/matches/${matchId}/pass-tendencies`).then(async (res) => {
-      const passTendencies = await res.json();
-      setPassTendencies(passTendencies);
-    });
-  }, [matchId]);
+export function useMatchSummary(matchId: string) {
+  return useQuery({
+    queryKey: ["matches", matchId, "summary"],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/matches/${matchId}/summary`);
+      return (await res.json()) as {
+        [team_name: string]: {
+          Poss: number;
+          "Touches in Att 3rd": number;
+          Shots: number;
+          "Shots on Target": number;
+          "Passing Accuracy": number;
+          "Forward Passing": number;
+          "Def. Actions in Att 3rd": number;
+          Corners: number;
+          "Fouls Commited": number;
+        };
+      };
+    },
+  });
+}
 
-  return passTendencies;
+export function useShotChart(matchId: string) {
+  return useQuery({
+    queryKey: ["matches", matchId, "shotchart"],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/matches/${matchId}/shotchart`);
+      const data = (await res.json()) as TShot[];
+
+      data.forEach((shot) => {
+        shot.location = adjustLocation(shot.location);
+        shot.shot.end_location = [
+          ...adjustLocation(
+            shot.shot.end_location.slice(0, 2) as [number, number]
+          ),
+          shot.shot.end_location[2],
+        ];
+      });
+
+      return data;
+    },
+  });
+}
+
+export function useMatchEvents(matchId: string) {
+  return useQuery({
+    queryKey: ["matches", matchId, "events"],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/matches/${matchId}/events`);
+      return (await res.json()) as Record<EventType, Record<string, any>[]>;
+    },
+  });
 }

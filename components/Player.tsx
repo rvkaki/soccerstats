@@ -1,6 +1,6 @@
 import { Circle, Group, Text } from "react-konva";
-import { PlayerPosition } from "../../../types";
-import { PlayerPositionToLocation, reverseLocation } from "../consts";
+import { PlayerPosition } from "../app/types";
+import { PlayerPositionToLocation, reverseLocation } from "../app/matches/[matchId]/consts";
 
 export default function Player({
   jersey_number,

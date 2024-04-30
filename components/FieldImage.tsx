@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Image as KonvaImage } from "react-konva";
-import Field from "./Soccer_Field.png";
-import { FIELD_HEIGHT, FIELD_WIDTH } from "../consts";
+import Field from "../public/Soccer_Field.png";
+import { FIELD_HEIGHT, FIELD_WIDTH } from "../app/matches/[matchId]/consts";
 
 export default function FieldImage({
   x = 0,

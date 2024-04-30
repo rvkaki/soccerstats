@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Circle, Group, Layer, Line, Stage } from "react-konva";
-import FieldImage from "../../../app/matches/[matchId]/components/FieldImage";
+import FieldImage from "../../../components/FieldImage";
 import {
   FIELD_HEIGHT,
   FIELD_WIDTH,

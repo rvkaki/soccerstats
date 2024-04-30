@@ -4,24 +4,25 @@ import Link from "next/link";
 import { useMatches } from "./matches/[matchId]/hooks";
 
 export default function Home() {
-  const competition = useMatches();
+  const { data: competition, isLoading } = useMatches();
 
-  if (!competition) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
     <main>
       <h1>
-        {competition.competition.competition_name}{" "}
-        {competition.competition.season_name}
+        {competition!.competition.competition_name}{" "}
+        {competition!.competition.season_name}
       </h1>
       <ul>
-        {competition.matches.map((match) => (
+        {competition!.matches.map((match) => (
           <Link
             key={match.match_id}
             href={`/matches/${match.match_id}`}
             className="flex flex-col gap-4 hover:bg-gray-700 p-2 rounded-md cursor-pointer"
+            prefetch={false}
           >
             <li>
               {match.match_date}: {match.home_team} {match.home_score} -{" "}

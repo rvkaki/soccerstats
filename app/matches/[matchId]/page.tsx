@@ -4,6 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { useMatchInfo } from "./hooks";
 import TabPasses from "../../../components/TabPasses";
+import TabSummary from "@/components/TabSummary";
+import TabCompare from "@/components/TabCompare";
+import TabShotChart from "@/components/TabShotChart";
+import TabAdvanced from "@/components/TabAdvanced";
 
 export default function Dashboard({
   params,
@@ -12,8 +16,7 @@ export default function Dashboard({
   searchParams: URLSearchParams;
 }) {
   const router = useRouter();
-  // const playerStats = usePlayerStats(params.matchId, selectedPlayerId);
-  const matchInfo = useMatchInfo(params.matchId);
+  const { data: matchInfo } = useMatchInfo(params.matchId);
 
   return (
     <main className="w-full h-screen flex flex-col items-center max-w-6xl gap-24 p-8 mx-auto">
@@ -48,12 +51,30 @@ export default function Dashboard({
         <TabsList>
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="passes">Passes</TabsTrigger>
+          <TabsTrigger value="compare">Compare</TabsTrigger>
+          <TabsTrigger value="shots">Shots</TabsTrigger>
+          <TabsTrigger value="advanced">Advanced</TabsTrigger>
         </TabsList>
         <TabsContent value="summary">
-          Make changes to your account here.
+          <TabSummary matchId={params.matchId} />
         </TabsContent>
         <TabsContent value="passes">
           <TabPasses matchId={params.matchId} />
+        </TabsContent>
+        <TabsContent value="compare">
+          {matchInfo && (
+            <TabCompare
+              matchId={params.matchId}
+              homeTeam={matchInfo.home_team}
+              awayTeam={matchInfo.away_team}
+            />
+          )}
+        </TabsContent>
+        <TabsContent value="shots">
+          <TabShotChart matchId={params.matchId} />
+        </TabsContent>
+        <TabsContent value="advanced">
+          <TabAdvanced matchId={params.matchId} />
         </TabsContent>
       </Tabs>
     </main>

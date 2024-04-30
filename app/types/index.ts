@@ -152,7 +152,7 @@ type ShotTechnique =
 
 type ShotType = "Open Play" | "Kick Off" | "Penalty" | "Corner" | "Free Kick";
 
-type ShotOutcome =
+export type ShotOutcome =
   | "Goal"
   | "Saved"
   | "Off T"
@@ -304,6 +304,14 @@ export type Goalkeeper = BaseEvent & {
   };
 };
 
+export type DuelOutcome =
+  | "Won"
+  | "Lost In Play"
+  | "Lost Out"
+  | "Success"
+  | "Success In Play"
+  | "Success Out";
+
 export type Duel = BaseEvent & {
   type: "Duel";
   duel: {
@@ -313,31 +321,27 @@ export type Duel = BaseEvent & {
     };
     outcome?: {
       id: number;
-      name:
-        | "Won"
-        | "Lost In Play"
-        | "Lost Out"
-        | "Success"
-        | "Success In Play"
-        | "Success Out";
+      name: DuelOutcome;
     };
     counterpress?: boolean;
   };
 };
+
+export type InterceptionOutcome =
+  | "Won"
+  | "Lost"
+  | "Lost In Play"
+  | "Lost Out"
+  | "Success"
+  | "Success In Play"
+  | "Success Out";
 
 export type Interception = BaseEvent & {
   type: "Interception";
   interception: {
     outcome: {
       id: number;
-      name:
-        | "Won"
-        | "Lost"
-        | "Lost In Play"
-        | "Lost Out"
-        | "Success"
-        | "Success In Play"
-        | "Success Out";
+      name: InterceptionOutcome;
     };
   };
 };
