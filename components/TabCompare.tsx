@@ -1,8 +1,7 @@
 import {
   useMatchTeams,
-  usePlayerStatsByJerseyNumber,
+  usePlayerStatsById,
 } from "@/app/matches/[matchId]/hooks";
-import { PlayerStatToLabel } from "@/lib/consts";
 import { shortenName } from "@/lib/utils";
 import { useState } from "react";
 
@@ -15,18 +14,10 @@ export default function TabCompare({
   homeTeam: string;
   awayTeam: string;
 }) {
-  const [homePlayerNumber, setHomePlayerNumber] = useState<number | null>(null);
-  const [awayPlayerNumber, setAwayPlayerNumber] = useState<number | null>(null);
-  const { data: homePlayerStats } = usePlayerStatsByJerseyNumber(
-    matchId,
-    homeTeam,
-    homePlayerNumber
-  );
-  const { data: awayPlayerStats } = usePlayerStatsByJerseyNumber(
-    matchId,
-    awayTeam,
-    awayPlayerNumber
-  );
+  const [homePlayerId, setHomePlayerId] = useState<number | null>(null);
+  const [awayPlayerId, setAwayPlayerId] = useState<number | null>(null);
+  const { data: homePlayerStats } = usePlayerStatsById(matchId, homePlayerId);
+  const { data: awayPlayerStats } = usePlayerStatsById(matchId, awayPlayerId);
 
   const { data: matchTeams = [] } = useMatchTeams(matchId);
 
@@ -43,14 +34,12 @@ export default function TabCompare({
                 className="w-full border-b p-2"
                 style={{
                   backgroundColor:
-                    homePlayerNumber === player.jersey_number
-                      ? "#e5e7eb"
-                      : "white",
+                    homePlayerId === player.id ? "#e5e7eb" : "white",
                 }}
               >
                 <button
                   className="w-full text-start"
-                  onClick={() => setHomePlayerNumber(player.jersey_number!)}
+                  onClick={() => setHomePlayerId(player.id)}
                 >
                   {shortenName(player.name)}
                 </button>
@@ -66,7 +55,7 @@ export default function TabCompare({
               className="flex flex-row w-full border-b border-gray-400 p-2"
             >
               <span>{homePlayerStats?.[key]}</span>
-              <h2 className="flex-1 text-center">{PlayerStatToLabel[key]}</h2>
+              <h2 className="flex-1 text-center">{key}</h2>
               <span>{awayPlayerStats?.[key]}</span>
             </div>
           );
@@ -81,14 +70,12 @@ export default function TabCompare({
                 className="w-full border-b p-2"
                 style={{
                   backgroundColor:
-                    awayPlayerNumber === player.jersey_number
-                      ? "#e5e7eb"
-                      : "white",
+                    awayPlayerId === player.id ? "#e5e7eb" : "white",
                 }}
               >
                 <button
                   className="w-full text-end"
-                  onClick={() => setAwayPlayerNumber(player.jersey_number!)}
+                  onClick={() => setAwayPlayerId(player.id)}
                 >
                   {shortenName(player.name)}
                 </button>

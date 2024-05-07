@@ -49,19 +49,13 @@ export function useMatchInfo(matchId: string) {
   });
 }
 
-export function usePlayerStatsByJerseyNumber(
-  matchId: string,
-  teamName: string,
-  jerseyNumber: number | null
-) {
+export function usePlayerStatsById(matchId: string, playerId: number | null) {
   return useQuery({
-    queryKey: ["matches", matchId, "player-stats", teamName, jerseyNumber],
-    enabled: !!jerseyNumber,
+    queryKey: ["matches", matchId, "player-stats", playerId],
+    enabled: !!playerId,
     queryFn: async () => {
-      if (!jerseyNumber) return null;
-
       const res = await fetch(
-        `${API_URL}/matches/${matchId}/player-stats/${teamName}/${jerseyNumber}`
+        `${API_URL}/matches/${matchId}/player-stats/${playerId}`
       );
       const data = (await res.json()) as Record<string, any>;
       return data;

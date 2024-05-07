@@ -3,21 +3,6 @@ export const API_URL =
     ? "http://localhost:8000/api"
     : "https://soccerstats-api-production.up.railway.app/api";
 
-export const PlayerStatToLabel: Record<string, string> = {
-  Gls: "Goals",
-  Ast: "Assists",
-  PK: "Penalties",
-  PKatt: "Penalty Attempts",
-  Sh: "Shots",
-  SoT: "Shots on Target",
-  CrdY: "Yellow Cards",
-  CrdR: "Red Cards",
-  Touches: "Touches",
-  Tkl: "Tackles",
-  Int: "Interceptions",
-  Blocks: "Blocks",
-};
-
 export const EventTypes = [
   "passes",
   "ball_receipts",
@@ -42,7 +27,7 @@ export const EventTypes = [
   "50/50s",
   "bad_behaviours",
 ] as const;
-export type EventType = typeof EventTypes[number];
+export type EventType = (typeof EventTypes)[number];
 
 export const EventTypeToLabel: Record<(typeof EventTypes)[number], string> = {
   passes: "Passes",
