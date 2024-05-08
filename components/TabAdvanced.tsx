@@ -26,7 +26,7 @@ const scale = 4;
 export default function TabAdvanced({ matchId }: { matchId: string }) {
   const [homePlayerId, setHomePlayerId] = useState<number | null>(null);
   const [awayPlayerId, setAwayPlayerId] = useState<number | null>(null);
-  const [stat, setStat] = useState<EventType>("passes");
+  const [stat, setStat] = useState<EventType>("Pass");
   const { data: matchTeams = [] } = useMatchTeams(matchId);
   const { data: events } = useMatchEvents(matchId);
 
@@ -35,14 +35,14 @@ export default function TabAdvanced({ matchId }: { matchId: string }) {
 
   const homeEventsToDisplay =
     events?.[stat]?.filter((e) => {
-      if (e.team_id !== homeTeamId) return false;
+      if (e.team.id !== homeTeamId) return false;
       if (homePlayerId === null) return true;
       return e.player_id === homePlayerId;
     }) || [];
 
   const awayEventsToDisplay =
     events?.[stat]?.filter((e) => {
-      if (e.team_id !== awayTeamId) return false;
+      if (e.team.id !== awayTeamId) return false;
       if (awayPlayerId === null) return true;
       return e.player_id === awayPlayerId;
     }) || [];
@@ -95,14 +95,16 @@ export default function TabAdvanced({ matchId }: { matchId: string }) {
                 .filter(
                   (k) =>
                     ![
-                      "ball_receipts",
-                      "foul_wons",
-                      "goal_keepers",
-                      "injury_stoppages",
-                      "offsides",
-                      "shields",
-                      "bad_behaviours",
-                      "referee_ball_drops",
+                      "Starting XI",
+                      "Half Start",
+                      "Half End",
+                      "Player Off",
+                      "Player On",
+                      "Substitution",
+                      "Tactical Shift",
+                      "Referee Ball-Drop",
+                      "Injury Stoppage",
+                      "Bad Behaviour",
                     ].includes(k)
                 )
                 .map((key) => (
@@ -199,69 +201,73 @@ function EventItem({
   const location = adjustLocation(event.location);
 
   switch (stat) {
-    case "passes":
+    case "Pass":
       return (
         <Pass
           key={event.id}
           startPosition={location}
-          endPosition={adjustLocation(event.pass_end_location.slice(0, 2))}
+          endPosition={adjustLocation(event.pass.end_location.slice(0, 2))}
         />
       );
-    case "carrys":
+    case "Carry":
       console.log(event);
       return (
         <Carry
           key={event.id}
           startPosition={location}
-          endPosition={adjustLocation(event.carry_end_location.slice(0, 2))}
+          endPosition={adjustLocation(event.carry.end_location.slice(0, 2))}
         />
       );
-    case "shots":
+    case "Shot":
       return (
         <Shot
           key={event.id}
           startPosition={location}
-          endPosition={adjustLocation(event.shot_end_location.slice(0, 2))}
-          outcome={event.shot_outcome}
+          endPosition={adjustLocation(event.shot.end_location.slice(0, 2))}
+          outcome={event.shot.outcome.name}
         />
       );
-    case "dribbles":
+    case "Dribble":
       return (
         <Dribble
           key={event.id}
           location={location}
-          outcome={event.dribble_outcome}
+          outcome={event.dribble.outcome.name}
         />
       );
   }
 
   let radius = 0.8;
-  if (stat === "pressures") {
+  if (stat === "Pressure") {
     radius = 0.8 + 1 * event.duration;
   }
 
   let color = "black";
-  if (stat === "ball_recoverys") {
-    color = event.ball_recovery_recovery_failure ? "red" : "blue";
-  } else if (stat === "foul_committeds" && event.foul_committed_card) {
-    color = event.foul_committed_card === "Yellow Card" ? "yellow" : "red";
-  } else if (stat === "duels") {
-    if (["Lost In Play", "Lost Out", null].includes(event.duel_outcome)) {
+  if (stat === "Ball Recovery") {
+    color = "ball_recovery" in event ? "red" : "blue";
+  } else if (
+    stat === "Foul Committed" &&
+    "foul_committed" in event &&
+    "card" in event.foul_committed
+  ) {
+    color = event.foul_committed.card.name === "Yellow Card" ? "yellow" : "red";
+  } else if (stat === "Duel" && "outcome" in event.duel) {
+    if (["Lost In Play", "Lost Out", null].includes(event.duel.outcome.name)) {
       color = "red";
     } else {
       color = "blue";
     }
-  } else if (stat === "interceptions") {
+  } else if (stat === "Interception") {
     if (
       ["Lost", "Lost In Play", "Lost Out", null].includes(
-        event.interception_outcome
+        event.interception.outcome.name
       )
     ) {
       color = "red";
     } else {
       color = "blue";
     }
-  } else if (stat === "50/50s") {
+  } else if (stat === "50/50") {
     if (
       ["Lost", "Success To Opposition"].includes(event["50_50"].outcome.name)
     ) {

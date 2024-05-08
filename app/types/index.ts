@@ -68,11 +68,22 @@ type BaseEvent = {
   minute: number;
   second: number;
   possession: number;
-  possession_team: string;
-  play_pattern: PlayPattern;
-  team: string;
-  player: string;
-  player_id: number;
+  possession_team: {
+    id: number;
+    name: string;
+  };
+  play_pattern: {
+    id: number;
+    name: PlayPattern;
+  };
+  team: {
+    id: number;
+    name: string;
+  };
+  player: {
+    id: number;
+    name: string;
+  };
   position: PlayerPosition;
   location: Location;
   duration: number;
@@ -81,8 +92,6 @@ type BaseEvent = {
   out: boolean | null;
   related_events: string[];
   match_id: number;
-  possession_team_id: number;
-  team_id: number;
 };
 
 export type Pass = BaseEvent & {
@@ -409,10 +418,23 @@ export type Match = {
   match_id: number;
   match_date: string;
   kick_off: string;
-  competition: string;
-  season: string;
-  home_team: string;
-  away_team: string;
+  competition: {
+    competition_id: number;
+    country_name: string;
+    competition_name: string;
+  };
+  season: {
+    season_id: number;
+    season_name: string;
+  };
+  home_team: {
+    home_team_id: number;
+    home_team_name: string;
+  };
+  away_team: {
+    away_team_id: number;
+    away_team_name: string;
+  };
   home_score: number;
   away_score: number;
   match_status: "available" | "deleted" | "scheduled";
@@ -420,9 +442,18 @@ export type Match = {
   last_updated: string;
   last_updated_360: string;
   match_week: number;
-  competition_stage: string;
-  stadium: string;
-  referee: string;
+  competition_stage: {
+    id: number;
+    name: string;
+  };
+  stadium: {
+    id: number;
+    name: string;
+  };
+  referee: {
+    id: number;
+    name: string;
+  };
   home_managers: string;
   away_managers: string;
   data_version: string;

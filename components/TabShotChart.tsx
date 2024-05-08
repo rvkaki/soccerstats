@@ -29,7 +29,7 @@ export default function TabShotChart({ matchId }: { matchId: string }) {
           </Layer>
           <Layer name="shots">
             {shotChart.map((shot) => {
-              if (shot.possession_team_id !== team.id) return null;
+              if (shot.possession_team.id !== team.id) return null;
 
               return (
                 <Shot
@@ -52,13 +52,15 @@ export default function TabShotChart({ matchId }: { matchId: string }) {
           style={{
             top: hoveredShot.location[1] * scale + 10,
             left:
-              hoveredShot.team === matchTeams[0].name
+              hoveredShot.team.name === matchTeams[0].name
                 ? hoveredShot.location[0] * scale + 10
                 : hoveredShot.location[0] * scale + 10 + FIELD_WIDTH * scale,
           }}
         >
           <div className="flex flex-row w-full justify-between gap-6">
-            <span className="font-bold">{shortenName(hoveredShot.player)}</span>
+            <span className="font-bold">
+              {shortenName(hoveredShot.player.name)}
+            </span>
             <span className="font-bold">
               {hoveredShot.minute}&apos;{hoveredShot.second}
             </span>

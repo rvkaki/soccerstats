@@ -23,20 +23,26 @@ export default function Dashboard({
       {matchInfo && (
         <header className="flex flex-row w-full items-center gap-12">
           <div className="flex-1 flex flex-row items-center justify-between">
-            <h1 className="text-xl font-bold">{matchInfo.home_team}</h1>
+            <h1 className="text-xl font-bold">
+              {matchInfo.home_team.home_team_name}
+            </h1>
             <h2 className="text-3xl font-bold">{matchInfo.home_score}</h2>
           </div>
           <div className="flex flex-col items-center">
             <h3>{matchInfo.match_date}</h3>
 
             <h4 className="text-sm text-gray-600 leading-none pt-2">
-              {matchInfo.competition_stage}
+              {matchInfo.competition_stage.name}
             </h4>
-            <h4 className="font-bold">{matchInfo.competition}</h4>
+            <h4 className="font-bold">
+              {matchInfo.competition.competition_name}
+            </h4>
           </div>
           <div className="flex-1 flex flex-row items-center justify-between">
             <h2 className="text-2xl font-bold">{matchInfo.away_score}</h2>
-            <h1 className="text-xl font-bold">{matchInfo.away_team}</h1>
+            <h1 className="text-xl font-bold">
+              {matchInfo.away_team.away_team_name}
+            </h1>
           </div>
         </header>
       )}
@@ -65,8 +71,8 @@ export default function Dashboard({
           {matchInfo && (
             <TabCompare
               matchId={params.matchId}
-              homeTeam={matchInfo.home_team}
-              awayTeam={matchInfo.away_team}
+              homeTeam={matchInfo.home_team.home_team_name}
+              awayTeam={matchInfo.away_team.away_team_name}
             />
           )}
         </TabsContent>

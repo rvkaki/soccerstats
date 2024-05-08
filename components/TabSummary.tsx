@@ -14,10 +14,10 @@ export default function TabSummary({ matchId }: { matchId: string }) {
   }
 
   const homeTeam = matchTeams.find(
-    (team) => team.name === matchInfo?.home_team
+    (team) => team.name === matchInfo?.home_team?.home_team_name
   );
   const awayTeam = matchTeams.find(
-    (team) => team.name === matchInfo?.away_team
+    (team) => team.name === matchInfo?.away_team?.away_team_name
   );
 
   if (!homeTeam || !awayTeam) {

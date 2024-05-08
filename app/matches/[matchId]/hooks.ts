@@ -44,7 +44,7 @@ export function useMatchInfo(matchId: string) {
     queryKey: ["matches", matchId, "info"],
     queryFn: async () => {
       const res = await fetch(`${API_URL}/matches/${matchId}`);
-      return (await res.json()) as Record<string, any>;
+      return (await res.json()) as Match;
     },
   });
 }
