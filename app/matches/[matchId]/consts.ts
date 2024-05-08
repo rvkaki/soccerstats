@@ -32,6 +32,35 @@ export const PlayerPositionToLocation: { [key in PlayerPosition]: Location } = {
   "Secondary Striker": [FIELD_WIDTH / 1.125, FIELD_HEIGHT / 1.125],
 };
 
+export const PlayerPositionToShort: { [key in PlayerPosition]: string } = {
+  Goalkeeper: "GK",
+  "Left Back": "LB",
+  "Left Center Back": "LCB",
+  "Center Back": "CB",
+  "Right Center Back": "RCB",
+  "Right Back": "RB",
+  "Left Wing Back": "LWB",
+  "Right Wing Back": "RWB",
+  "Left Defensive Midfield": "LDM",
+  "Center Defensive Midfield": "CDM",
+  "Right Defensive Midfield": "RDM",
+  "Left Midfield": "LM",
+  "Left Center Midfield": "LCM",
+  "Center Midfield": "CM",
+  "Right Center Midfield": "RCM",
+  "Right Midfield": "RM",
+  "Left Wing": "LW",
+  "Left Attacking Midfield": "LAM",
+  "Center Attacking Midfield": "CAM",
+  "Right Attacking Midfield": "RAM",
+  "Right Wing": "RW",
+  "Left Center Forward": "LCF",
+  "Center Forward": "CF",
+  "Right Center Forward": "RCF",
+  Striker: "ST",
+  "Secondary Striker": "SS",
+};
+
 export function reverseLocation(location: [number, number]) {
   return [FIELD_WIDTH - location[0], FIELD_HEIGHT - location[1]];
 }

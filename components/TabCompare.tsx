@@ -1,19 +1,54 @@
+import { PlayerPositionToShort } from "@/app/matches/[matchId]/consts";
 import {
+  Player,
   useMatchTeams,
   usePlayerStatsById,
 } from "@/app/matches/[matchId]/hooks";
 import { shortenName } from "@/lib/utils";
 import { useState } from "react";
 
-export default function TabCompare({
-  matchId,
-  homeTeam,
-  awayTeam,
+function PlayerItem({
+  player,
+  isActive,
+  onClick,
+  isReverse = false,
 }: {
-  matchId: string;
-  homeTeam: string;
-  awayTeam: string;
+  player: Player;
+  isActive: boolean;
+  onClick: () => void;
+  isReverse?: boolean;
 }) {
+  const position =
+    typeof player.position === "object"
+      ? player.position.name
+      : player.position;
+
+  return (
+    <li
+      className="w-full border-b p-2"
+      style={{
+        backgroundColor: isActive ? "#e5e7eb" : "white",
+      }}
+    >
+      <button
+        className="w-full flex gap-2 items-center"
+        style={{
+          flexDirection: isReverse ? "row-reverse" : "row",
+          textAlign: isReverse ? "end" : "start",
+        }}
+        onClick={onClick}
+      >
+        <span className="text-gray-600 text-sm">
+          {PlayerPositionToShort[position]}
+        </span>
+        <span className="flex-1">{shortenName(player.name)}</span>
+        <span className="text-gray-600">#{player.jersey_number}</span>
+      </button>
+    </li>
+  );
+}
+
+export default function TabCompare({ matchId }: { matchId: string }) {
   const [homePlayerId, setHomePlayerId] = useState<number | null>(null);
   const [awayPlayerId, setAwayPlayerId] = useState<number | null>(null);
   const { data: homePlayerStats } = usePlayerStatsById(matchId, homePlayerId);
@@ -29,21 +64,12 @@ export default function TabCompare({
         {matchTeams[0]?.players?.map(
           (player) =>
             player.is_starter && (
-              <li
+              <PlayerItem
                 key={player.id}
-                className="w-full border-b p-2"
-                style={{
-                  backgroundColor:
-                    homePlayerId === player.id ? "#e5e7eb" : "white",
-                }}
-              >
-                <button
-                  className="w-full text-start"
-                  onClick={() => setHomePlayerId(player.id)}
-                >
-                  {shortenName(player.name)}
-                </button>
-              </li>
+                player={player}
+                isActive={homePlayerId === player.id}
+                onClick={() => setHomePlayerId(player.id)}
+              />
             )
         )}
       </ul>
@@ -65,21 +91,13 @@ export default function TabCompare({
         {matchTeams[1]?.players?.map(
           (player) =>
             player.is_starter && (
-              <li
+              <PlayerItem
                 key={player.id}
-                className="w-full border-b p-2"
-                style={{
-                  backgroundColor:
-                    awayPlayerId === player.id ? "#e5e7eb" : "white",
-                }}
-              >
-                <button
-                  className="w-full text-end"
-                  onClick={() => setAwayPlayerId(player.id)}
-                >
-                  {shortenName(player.name)}
-                </button>
-              </li>
+                player={player}
+                isActive={awayPlayerId === player.id}
+                onClick={() => setAwayPlayerId(player.id)}
+                isReverse
+              />
             )
         )}
       </ul>
