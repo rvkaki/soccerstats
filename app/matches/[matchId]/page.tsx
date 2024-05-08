@@ -68,13 +68,7 @@ export default function Dashboard({
           <TabPasses matchId={params.matchId} />
         </TabsContent>
         <TabsContent value="compare">
-          {matchInfo && (
-            <TabCompare
-              matchId={params.matchId}
-              homeTeam={matchInfo.home_team.home_team_name}
-              awayTeam={matchInfo.away_team.away_team_name}
-            />
-          )}
+          {matchInfo && <TabCompare matchId={params.matchId} />}
         </TabsContent>
         <TabsContent value="shots">
           <TabShotChart matchId={params.matchId} />
