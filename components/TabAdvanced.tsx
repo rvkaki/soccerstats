@@ -210,7 +210,6 @@ function EventItem({
         />
       );
     case "Carry":
-      console.log(event);
       return (
         <Carry
           key={event.id}

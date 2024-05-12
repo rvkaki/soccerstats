@@ -34,8 +34,6 @@ export default function Shot({
     }
   })();
 
-  console.log("Shot", startPosition, endPosition);
-
   if (!endPosition) {
     return (
       <Circle
