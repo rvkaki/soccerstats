@@ -18,16 +18,16 @@ export default function Shot({
   const color = (() => {
     switch (outcome) {
       case "Goal":
-        return "blue";
+        return "#2563eb";
       case "Blocked":
       case "Saved":
       case "Saved Off T":
       case "Saved To Post":
-        return "yellow";
+        return "#fde047";
       case "Off T":
       case "Post":
       case "Wayward":
-        return "red";
+        return "#ef4444";
       default:
         outcome satisfies never;
         return "white";

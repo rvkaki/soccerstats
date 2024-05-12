@@ -13,7 +13,7 @@ import Pass from "./Pass";
 import Player from "./Player";
 import { shortenName } from "@/lib/utils";
 
-const scale = 6;
+const scale = 5;
 
 export default function TabPasses({ matchId }: { matchId: string }) {
   const { data: matchTeams = [] } = useMatchTeams(matchId);
