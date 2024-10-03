@@ -4,11 +4,13 @@ export default function Pass({
   startPosition,
   endPosition,
   strokeWidth = 0.1,
+  strokeColor = "black",
   opacity = 1,
 }: {
   startPosition: [number, number];
   endPosition: [number, number];
   strokeWidth?: number;
+  strokeColor?: string;
   opacity?: number;
 }) {
   // Calculate the angle of the line segment
@@ -39,14 +41,14 @@ export default function Pass({
           endPosition[0],
           endPosition[1],
         ]}
-        stroke="black"
+        stroke={strokeColor}
         strokeWidth={strokeWidth}
         opacity={opacity}
       />
       {/* Arrow */}
       <Line
         points={arrowPoints}
-        stroke="black"
+        stroke={strokeColor}
         strokeWidth={strokeWidth}
         opacity={opacity}
       />

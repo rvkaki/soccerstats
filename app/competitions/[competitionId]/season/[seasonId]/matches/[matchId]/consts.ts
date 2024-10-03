@@ -1,7 +1,7 @@
-import { Location, PlayerPosition } from "../../types";
+import { Location, PlayerPosition } from "@/app/types";
 
-export const FIELD_WIDTH = 82;
-export const FIELD_HEIGHT = 124;
+export const FIELD_WIDTH = 80;
+export const FIELD_HEIGHT = 120;
 
 export const PlayerPositionToLocation: { [key in PlayerPosition]: Location } = {
   Goalkeeper: [FIELD_WIDTH / 8, FIELD_HEIGHT / 2],

@@ -1,19 +1,21 @@
+"use client";
 import { Circle, Group, Text } from "react-konva";
 import { PlayerPosition } from "../app/types";
-import { PlayerPositionToLocation, reverseLocation } from "../app/matches/[matchId]/consts";
+import { PlayerPositionToLocation } from "@/app/competitions/[competitionId]/season/[seasonId]/matches/[matchId]/consts";
 
 export default function Player({
   jersey_number,
   position,
   location,
-  is_starter,
   color = "blue",
+  radius = 2,
 }: {
   jersey_number?: number;
   position: { id: number; name: PlayerPosition } | PlayerPosition;
   location?: [number, number];
   is_starter?: boolean;
   color?: string;
+  radius?: number;
 }) {
   const actualLocation = (() => {
     if (location) {
@@ -30,11 +32,15 @@ export default function Player({
   return (
     <Group x={actualLocation[0]} y={actualLocation[1]}>
       <Circle
-        radius={2}
-        fill={is_starter ? color : "white"}
-        opacity={0.7}
+        radius={radius}
         stroke={color}
-        strokeWidth={0.1}
+        strokeWidth={radius * 0.12}
+        fill="transparent"
+        opacity={0.9}
+        shadowColor={color}
+        shadowBlur={1}
+        shadowOffsetX={0}
+        shadowOffsetY={0}
       />
       <Text
         width={4}
@@ -42,10 +48,14 @@ export default function Player({
         align="center"
         verticalAlign="middle"
         text={jersey_number?.toString()}
-        fontSize={2.5}
+        fontSize={Math.round(radius * 2 * 0.5)}
         x={-2}
         y={-2}
-        fill={is_starter ? "white" : color}
+        fill={color}
+        shadowColor={color}
+        shadowBlur={1}
+        shadowOffsetX={0}
+        shadowOffsetY={0}
       />
     </Group>
   );

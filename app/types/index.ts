@@ -95,9 +95,9 @@ type BaseEvent = {
 };
 
 export type Pass = BaseEvent & {
-  type: "Pass";
+  type: { id: number; name: "Pass" };
   pass: {
-    recipient: { id: number; name: string };
+    recipient?: { id: number; name: string };
     length: number;
     angle: number;
     height: { id: number; name: PassHeight };
@@ -117,7 +117,7 @@ export type Pass = BaseEvent & {
 };
 
 export type Lineup = BaseEvent & {
-  type: "Starting XI";
+  type: { id: number; name: "Starting XI" };
   tactics: {
     formation: number;
     lineup: {
@@ -136,7 +136,7 @@ type FoulType =
   | "Foul Out"
   | "Handball";
 export type FoulCommitted = BaseEvent & {
-  type: "Foul Committed";
+  type: { id: number; name: "Foul Committed" };
   foul_committed: {
     counterpress?: boolean;
     offensive?: boolean;
@@ -172,10 +172,10 @@ export type ShotOutcome =
   | "Saved To Post";
 
 export type Shot = BaseEvent & {
-  type: "Shot";
+  type: { id: number; name: "Shot" };
   shot: {
     statsbomb_xg: number;
-    end_location: Location3D;
+    end_location: Location3D | Location;
     technique: {
       id: number;
       name: ShotTechnique;
@@ -196,7 +196,7 @@ export type Shot = BaseEvent & {
 };
 
 export type Dribble = BaseEvent & {
-  type: "Dribble";
+  type: { id: number; name: "Dribble" };
   dribble: {
     Overrun?: boolean;
     Nutmeg?: boolean;
@@ -209,26 +209,30 @@ export type Dribble = BaseEvent & {
 };
 
 export type BallRecovery = BaseEvent & {
-  type: "Ball Recovery";
+  type: { id: number; name: "Ball Recovery" };
+  ball_recovery: {
+    recovery_failure?: boolean;
+    offensive?: boolean;
+  };
 };
 
 export type Carry = BaseEvent & {
-  type: "Carry";
+  type: { id: number; name: "Carry" };
   carry: {
     end_location: Location;
   };
 };
 
 export type BallReceipt = BaseEvent & {
-  type: "Ball Receipt*";
+  type: { id: number; name: "Ball Receipt*" };
 };
 
 export type Pressure = BaseEvent & {
-  type: "Pressure";
+  type: { id: number; name: "Pressure" };
 };
 
 export type Block = BaseEvent & {
-  type: "Block";
+  type: { id: number; name: "Block" };
   block: {
     save_block?: boolean;
     deflection?: boolean;
@@ -238,7 +242,7 @@ export type Block = BaseEvent & {
 };
 
 export type Dispossessed = BaseEvent & {
-  type: "Dispossessed";
+  type: { id: number; name: "Dispossessed" };
 };
 
 type GoalkeeperType =
@@ -287,7 +291,7 @@ type GoalkeeperOutcome =
   | "Punched Out";
 
 export type Goalkeeper = BaseEvent & {
-  type: "Goal Keeper";
+  type: { id: number; name: "Goal Keeper" };
   goalkeeper: {
     end_location?: Location;
     position: {
@@ -322,7 +326,7 @@ export type DuelOutcome =
   | "Success Out";
 
 export type Duel = BaseEvent & {
-  type: "Duel";
+  type: { id: number; name: "Duel" };
   duel: {
     type: {
       id: number;
@@ -346,7 +350,7 @@ export type InterceptionOutcome =
   | "Success Out";
 
 export type Interception = BaseEvent & {
-  type: "Interception";
+  type: { id: number; name: "Interception" };
   interception: {
     outcome: {
       id: number;
@@ -356,14 +360,14 @@ export type Interception = BaseEvent & {
 };
 
 export type Miscontrol = BaseEvent & {
-  type: "Miscontrol";
+  type: { id: number; name: "Miscontrol" };
   miscontrol: {
     aerial_won?: boolean;
   } | null;
 };
 
 export type Clearance = BaseEvent & {
-  type: "Clearance";
+  type: { id: number; name: "Clearance" };
   clearance: {
     body_part: {
       id: number;
@@ -459,4 +463,18 @@ export type Match = {
   data_version: string;
   shot_fidelity_version: string;
   xy_fidelity_version: string;
+};
+
+export type PlayerAction = Omit<MatchEvent, "related_events"> & {
+  related_events: PlayerAction[];
+  event360: {
+    event_uuid: string;
+    freeze_frame: {
+      actor: boolean;
+      keeper: boolean;
+      teammate: boolean;
+      location: Location;
+    }[];
+    visible_area: number[];
+  };
 };

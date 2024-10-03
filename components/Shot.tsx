@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { Circle, Group, Line } from "react-konva";
-import { ShotOutcome, Shot as TShot } from "../app/types";
+import { ShotOutcome } from "../app/types";
 
 export default function Shot({
   startPosition,
@@ -9,31 +8,16 @@ export default function Shot({
   xg = 0.5,
   onMouseOut,
   onMouseOver,
+  strokeWidth = 0.2,
+  strokeColor = "white",
 }: {
   startPosition: [number, number];
-  endPosition?: [number, number];
+  endPosition?: [number, number] | [number, number, number];
   outcome: ShotOutcome;
   xg?: number;
+  strokeWidth?: number;
+  strokeColor?: string;
 } & { onMouseOver?: () => void; onMouseOut?: () => void }) {
-  const color = (() => {
-    switch (outcome) {
-      case "Goal":
-        return "#2563eb";
-      case "Blocked":
-      case "Saved":
-      case "Saved Off T":
-      case "Saved To Post":
-        return "#fde047";
-      case "Off T":
-      case "Post":
-      case "Wayward":
-        return "#ef4444";
-      default:
-        outcome satisfies never;
-        return "white";
-    }
-  })();
-
   if (!endPosition) {
     return (
       <Circle
@@ -42,16 +26,43 @@ export default function Shot({
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
         radius={1.7 * Math.max(0.5, xg)}
-        fill={color}
+        fill={strokeColor}
       />
     );
   }
 
+  // Calculate the angle of the line segment
+  const angle = Math.atan2(
+    endPosition[1] - startPosition[1],
+    endPosition[0] - startPosition[0]
+  );
+
+  // Define the length of the arrowhead
+  const arrowLength = 1;
+
+  // Calculate the points for the arrowhead
+  const arrowPoints = [
+    endPosition[0] - arrowLength * Math.cos(angle - Math.PI / 6),
+    endPosition[1] - arrowLength * Math.sin(angle - Math.PI / 6),
+    endPosition[0],
+    endPosition[1],
+    endPosition[0] - arrowLength * Math.cos(angle + Math.PI / 6),
+    endPosition[1] - arrowLength * Math.sin(angle + Math.PI / 6),
+  ];
+
   return (
-    <Line
-      points={[...startPosition, ...endPosition]}
-      stroke={color}
-      strokeWidth={0.2}
-    />
+    <Group>
+      <Line
+        points={[...startPosition, ...endPosition]}
+        stroke={strokeColor}
+        strokeWidth={strokeWidth}
+      />
+      {/* Arrow */}
+      <Line
+        points={arrowPoints}
+        stroke={strokeColor}
+        strokeWidth={strokeWidth}
+      />
+    </Group>
   );
 }
