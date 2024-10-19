@@ -32,6 +32,13 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        hostname: "fbref.com",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

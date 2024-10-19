@@ -21,6 +21,8 @@ export type Player = {
   jersey_number?: number;
   position: { id: number; name: PlayerPosition } | PlayerPosition;
   is_starter: boolean;
+  nickname?: string;
+  img?: string;
 };
 
 export function useCompetitions() {

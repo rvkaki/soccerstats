@@ -2,10 +2,8 @@
 
 import { MatchEvent } from "@/app/types";
 import twColors from "@/lib/tailwindColors";
-import { Circle, Group, Rect } from "react-konva";
+import { Group, Rect } from "react-konva";
 import { FIELD_HEIGHT, FIELD_WIDTH } from "../consts";
-import Konva from "konva";
-import { useEffect, useRef, useState } from "react";
 
 const FACTOR = 4;
 
@@ -26,8 +24,6 @@ function getActionsMatrix(actions: MatchEvent[]) {
     matrix[y][x] += 1;
   });
 
-  console.table(matrix);
-
   return matrix;
 }
 
@@ -40,7 +36,6 @@ export default function Heatmap({
   actions: MatchEvent[];
   colorName: keyof typeof twColors;
 }) {
-  const [groupRef, setGroupRef] = useState<Konva.Group | null>(null);
   const actionsMatrix = getActionsMatrix(actions);
 
   const colorGradientGrid = [
@@ -66,17 +61,8 @@ export default function Heatmap({
     return colorGradientGrid[index];
   }
 
-  useEffect(() => {
-    if (groupRef) {
-      // Apply blur filter to the group
-      groupRef.filters([Konva.Filters.Blur]);
-      groupRef.blurRadius(FACTOR);
-      groupRef.cache();
-    }
-  }, [id, groupRef]);
-
   return (
-    <Group ref={setGroupRef} id={`${id}_heatmap`}>
+    <Group opacity={0.6}>
       {actionsMatrix.map((row, x) =>
         row.map((count, y) => {
           if (count === 0) {

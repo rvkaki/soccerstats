@@ -10,6 +10,7 @@ import {
   Shot as TShot,
 } from "@/app/types";
 import Carry from "@/components/Carry";
+import ImageNoBackground from "@/components/ImageNoBackground";
 import Pass from "@/components/Pass";
 import Pitch from "@/components/Pitch";
 import Shot from "@/components/Shot";
@@ -36,6 +37,9 @@ import {
 } from "@/lib/hooks";
 import twColors from "@/lib/tailwindColors";
 import { cn } from "@/lib/utils";
+import { Layer as TLayer } from "konva/lib/Layer";
+import { Text as TText } from "konva/lib/shapes/Text";
+import { Stage as TStage } from "konva/lib/Stage";
 import { ChevronsUpDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Circle, Layer, Stage } from "react-konva";
@@ -63,6 +67,7 @@ export default function Page({
   };
   searchParams: URLSearchParams;
 }) {
+  const [stageRef, setStageRef] = useState<TStage | null>(null);
   const { data: matchInfo } = useMatchInfo({
     competitionId,
     seasonId,
@@ -133,6 +138,124 @@ export default function Page({
     }
   }
 
+  const homePlayer = matchTeams[0]?.players.find(
+    (player) => player.id === homeItemId
+  );
+
+  const awayPlayer = matchTeams[1]?.players.find(
+    (player) => player.id === awayItemId
+  );
+
+  function downloadImage() {
+    if (!stageRef) {
+      return;
+    }
+
+    const container = document.createElement("div");
+    const newStage = new TStage({
+      width: stageRef.width(),
+      height: stageRef.height() + 70,
+      container,
+    });
+    // Create new layer with match and player info
+    const newLayer = new TLayer({
+      width: stageRef.width(),
+      height: 70,
+    });
+    const matchScoreText = new TText({
+      x: 5,
+      y: 15,
+      text: `${matchInfo?.home_team.home_team_name} ${matchInfo?.home_score} - ${matchInfo?.away_score} ${matchInfo?.away_team.away_team_name}`,
+      fontSize: 16,
+      fill: "white",
+    });
+    newLayer.add(matchScoreText);
+
+    const matchDateText = new TText({
+      x: 5,
+      y: 5,
+      text: matchInfo?.match_date,
+      fontSize: 10,
+      fill: twColors.neutral[400],
+    });
+    newLayer.add(matchDateText);
+
+    if (homeItemId) {
+      const text = homePlayer
+        ? `${homePlayer.nickname ?? homePlayer.name}`
+        : matchInfo?.home_team.home_team_name;
+
+      const homePlayerText = new TText({
+        x: 5,
+        y: 35,
+        text: text,
+        fontSize: 12,
+        fill: twColors.violet[500],
+      });
+      newLayer.add(homePlayerText);
+
+      const homeStatText = EventLegend({
+        events: homeItemId ? data[homeItemId] : [],
+        color: "white",
+        stat,
+      });
+      const homeStatTextLayer = new TText({
+        x: 5,
+        y: 50,
+        text: homeStatText?.props.children.join(""),
+        fontSize: 12,
+        fill: "white",
+      });
+      newLayer.add(homeStatTextLayer);
+    }
+
+    if (awayItemId) {
+      const text = awayPlayer
+        ? `${awayPlayer.nickname ?? awayPlayer.name}`
+        : matchInfo?.away_team.away_team_name;
+
+      const awayPlayerText = new TText({
+        x: stageRef.width() - 5,
+        y: 35,
+        text: text,
+        fontSize: 12,
+        fill: twColors.amber[500],
+      });
+      awayPlayerText.offsetX(awayPlayerText.width());
+      newLayer.add(awayPlayerText);
+
+      const awayStatText = EventLegend({
+        events: awayItemId ? data[awayItemId] : [],
+        color: "white",
+        stat,
+      });
+      const awayStatTextLayer = new TText({
+        x: stageRef.width() - 5,
+        y: 50,
+        text: awayStatText?.props.children.join(""),
+        fontSize: 12,
+        fill: "white",
+      });
+      awayStatTextLayer.offsetX(awayStatTextLayer.width());
+      newLayer.add(awayStatTextLayer);
+    }
+
+    newStage.add(newLayer);
+    // add the content of the original stage
+    const layer = stageRef.clone().children[0];
+    layer.setPosition({ x: 0, y: 70 });
+    layer.scale(stageRef.scale());
+    newStage.add(layer);
+
+    const dataURL = newStage.toDataURL({
+      pixelRatio: 2,
+    });
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = "match.png";
+    link.click();
+  }
+
   if (!matchInfo || !matchTeams.length) {
     return null;
   }
@@ -182,8 +305,14 @@ export default function Page({
           <div className="flex flex-col gap-4 h-full max-w-fit">
             <StatSelector selected={stat} onSelect={setStat} />
 
-            <div className="w-full flex-1">
+            <div className="w-full flex-1 relative">
+              <div className="absolute top-0 right-0 p-4 z-10">
+                <Button onClick={downloadImage} size="sm">
+                  Export
+                </Button>
+              </div>
               <Stage
+                ref={setStageRef}
                 width={120 * scale}
                 height={80 * scale}
                 scale={{ x: scale, y: scale }}
@@ -229,16 +358,36 @@ export default function Page({
             </div>
 
             <div className="flex flex-row justify-between gap-4">
-              <EventLegend
-                events={homeItemId ? data[homeItemId] : []}
-                color={twColors.violet[500]}
-                stat={stat}
-              />
-              <EventLegend
-                events={awayItemId ? data[awayItemId] : []}
-                color={twColors.amber[500]}
-                stat={stat}
-              />
+              <div className="flex flex-col items-center gap-2">
+                {homePlayer && homePlayer.img && (
+                  <ImageNoBackground
+                    src={homePlayer.img}
+                    width={100}
+                    height={100}
+                    alt=""
+                  />
+                )}
+                <EventLegend
+                  events={homeItemId ? data[homeItemId] : []}
+                  color={twColors.violet[500]}
+                  stat={stat}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                {awayPlayer && awayPlayer.img && (
+                  <ImageNoBackground
+                    src={awayPlayer.img}
+                    width={100}
+                    height={100}
+                    alt=""
+                  />
+                )}
+                <EventLegend
+                  events={awayItemId ? data[awayItemId] : []}
+                  color={twColors.amber[500]}
+                  stat={stat}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -614,11 +763,13 @@ function StatSelector({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "w-full justify-between border-[2px] border-neutral-700 rounded-lg hover:bg-neutral-700 hover:bg-opacity-20",
+            "w-full justify-between border-[2px] border-neutral-700 rounded-lg hover:bg-neutral-700 hover:bg-opacity-20 capitalize",
             selected ? "text-white" : "text-neutral-400"
           )}
         >
-          {selectedStat ? selectedStat.label : "Select stat..."}
+          {selectedStat
+            ? selectedStat.value.split(".").reverse().join(" ")
+            : "Select stat..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -695,7 +846,7 @@ function TeamOrPlayerSelector({
           <div
             key={player.id}
             className={cn(
-              "flex items-center gap-2 cursor-pointer p-2 rounded-md border border-transparent bg-opacity-0 hover:bg-opacity-10",
+              "flex items-center gap-2 cursor-pointer p-2 rounded-md justify-between border border-transparent bg-opacity-0 hover:bg-opacity-10",
               reverse && "flex-row-reverse",
               teamIndex === 0
                 ? "bg-violet-500 hover:border-violet-500"
@@ -704,8 +855,11 @@ function TeamOrPlayerSelector({
             )}
             onClick={() => onClick?.(player.id)}
           >
-            <span>{PlayerPositionToShort[position]}</span>
-            <span>{player.name}</span>
+            <span className="flex gap-2">
+              <span>{PlayerPositionToShort[position]}</span>
+              <span>{player.nickname ?? player.name}</span>
+            </span>
+            <span className="text-neutral-400">#{player.jersey_number}</span>
           </div>
         );
       })}
