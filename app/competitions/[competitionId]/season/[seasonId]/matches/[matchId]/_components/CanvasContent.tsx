@@ -57,10 +57,10 @@ export default function CanvasContent({
 
   const { data = { [homeItemId!]: [], [awayItemId!]: [] } } =
     useMatchComparisonEvents({
-      competitionId: parseInt(competitionId),
-      seasonId: parseInt(seasonId),
+      competitionId: parseInt(competitionId as string),
+      seasonId: parseInt(seasonId as string),
       stat: stat!,
-      matchId,
+      matchId: matchId as string,
       ids: [homeItemId, awayItemId].filter(Boolean) as number[],
     });
 
