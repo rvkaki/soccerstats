@@ -28,7 +28,8 @@ export default function EventLegend({
     total++;
     switch (stat) {
       case "passes.total":
-      case "passes.progressive":
+      case "passes.progressive_made":
+      case "passes.progressive_received":
       case "passes.into_box":
       case "passes.chance_creation":
         if (!(event as TPass).pass.outcome) {
@@ -136,7 +137,8 @@ export default function EventLegend({
     "defensive_actions.total": "Defensive Actions",
     "passes.chance_creation": "Chance Creation Passes",
     "passes.into_box": "Passes Into Box",
-    "passes.progressive": "Progressive Passes",
+    "passes.progressive_made": "Progressive Passes",
+    "passes.progressive_received": "Progressive Passes Received",
     "passes.total": "Passes",
     "shots.on_target": "Shots On Target",
     "shots.total": "Shots",

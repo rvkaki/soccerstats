@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Match as TMatch } from "@/app/types";
 import { useMatches } from "@/lib/hooks";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Component for displaying a single match
 const Match = ({ match }: { match: TMatch }) => {
@@ -81,7 +82,23 @@ export default function Home({
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <main className="w-full h-screen flex flex-col items-center max-w-6xl gap-24 p-8 mx-auto">
+        <Skeleton className="h-9 w-[400px]" />
+        <div className="w-full flex flex-col gap-2 items-start">
+          <Skeleton className="h-8 w-[200px]" />
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 w-full">
+            {new Array(8).fill(null).map((_, idx) => (
+              <div key={idx}>
+                <div className="bg-neutral-900 rounded-md border border-neutral-800 p-5 cursor-pointer hover:bg-neutral-800 h-[90px] flex items-center text-neutral-100 hover:text-white">
+                  <Skeleton className="h-7 w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (

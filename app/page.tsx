@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { useCompetitions } from "@/lib/hooks";
 import Link from "next/link";
 
@@ -7,7 +8,17 @@ export default function Home() {
   const { data: competitions = [], isLoading } = useCompetitions();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <main className="w-full h-screen grid grid-cols-3 max-w-6xl gap-6 p-8 my-12 mx-auto">
+        {new Array(74).fill(null).map((_, idx) => (
+          <div key={idx}>
+            <div className="bg-neutral-900 rounded-md border border-neutral-800 p-5 cursor-pointer hover:bg-neutral-800 h-full flex items-center text-neutral-100 hover:text-white">
+              <Skeleton className="h-7 w-full" />
+            </div>
+          </div>
+        ))}
+      </main>
+    );
   }
 
   return (

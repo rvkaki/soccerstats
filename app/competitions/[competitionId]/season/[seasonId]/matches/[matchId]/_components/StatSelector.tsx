@@ -36,7 +36,8 @@ export default function StatSelector({
       label: "Passes",
       items: [
         { label: "Total", value: "passes.total" },
-        { label: "Progressive", value: "passes.progressive" },
+        { label: "Progressive", value: "passes.progressive_made" },
+        { label: "Progressive Received", value: "passes.progressive_received" },
         { label: "Into Box", value: "passes.into_box" },
         { label: "Chance Creation", value: "passes.chance_creation" },
       ],
