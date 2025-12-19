@@ -41,7 +41,7 @@
     "typescript": "5.0.4"
   },
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.28.11"
