@@ -1,7 +1,4 @@
 {
-  "functions": {
-    "api/**": {
-      "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
-    }
-  }
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next"
 }
